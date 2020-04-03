@@ -1,0 +1,32 @@
+---
+title: 'Week 2: Map Webpage'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(leaflet)
+```
+
+```{r, warning=FALSE, message=FALSE}
+covid_df <- read.csv("04-02-2020.csv")
+caCovid <- covid_df[covid_df$Province_State == "California",]
+```
+
+## Cumulative Confirmed Covid-19 Cases on April 2, 2020
+#### By County in California
+
+```{r, warning=FALSE, message=FALSE}
+mapCaCovid <- caCovid[,c("Admin2","Lat","Long_","Confirmed")]
+
+mapCaCovid %>%
+  leaflet(height=400) %>%
+  addTiles() %>%
+  addCircles(lat=mapCaCovid$Lat,lng=mapCaCovid$Long_,
+             weight=1,radius=mapCaCovid$Confirmed*20,
+             popup=paste0(mapCaCovid$Admin2," County: ",
+                          mapCaCovid$Confirmed,
+                          " Confirmed Cases"))
+```
+
+Created date: `r format(Sys.Date(), format="%B %d, %Y")`
